@@ -10,8 +10,6 @@ Provides a [Sumologic Lookup Table][1].
 
 ## Example Usage
 ```hcl
-data "sumologic_personal_folder" "personalFolder" {}
-
 resource "sumologic_lookup_table" "lookupTable" {
     name = "a lookup table updated"
     fields {
@@ -20,7 +18,7 @@ resource "sumologic_lookup_table" "lookupTable" {
     }
     ttl               = 100
     primary_keys      = ["FieldName1"]
-    parent_folder_id  = "${data.sumologic_personal_folder.personalFolder.id}"
+    parent_folder_id  = "<personal folder id>"
     size_limit_action = "DeleteOldData"
     description       = "some description"
 }

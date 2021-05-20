@@ -11,8 +11,8 @@ Provides a [Sumologic Partition][1].
 ## Example Usage
 ```hcl
 resource "sumologic_partition" "examplePartition" {
-  name = "terraform_examplePartition"
-  routing_expression = "_sourcecategory=*/Terraform"
+  name = "examplePartition"
+  routing_expression = "_sourcecategory=*/IAC"
   analytics_tier = "continuous"
   is_compliant = false
   lifecycle {

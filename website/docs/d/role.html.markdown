@@ -7,8 +7,7 @@ description: |-
 
 # sumologic_role
 
-Provides a way to retrieve Sumo Logic role details (id, names, etc) for a role
-managed by another terraform stack.
+Provides a way to retrieve Sumo Logic role details (id, names, etc) for a role.
 
 
 ## Example Usage

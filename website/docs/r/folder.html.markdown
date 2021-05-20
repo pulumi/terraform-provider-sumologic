@@ -10,12 +10,10 @@ Provides the ability to create, read, delete, update, and manage of folders.
 
 ## Example Usage
 ```hcl
-data "sumologic_personal_folder" "personalFolder" {}
-
 resource "sumologic_folder" "folder" {
   name        = "test-folder"
   description = "A test folder"
-  parent_id   = "${data.sumologic_personal_folder.personalFolder.id}"
+  parent_id   = "<personal folder id>"
 }
 ```
 

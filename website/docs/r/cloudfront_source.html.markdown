@@ -13,7 +13,7 @@ __IMPORTANT:__ The AWS credentials are stored in plain-text in the state. This i
 ## Example Usage
 ```hcl
 
-resource "sumologic_cloudfront_source" "terraform_cloudfront_source" {
+resource "sumologic_cloudfront_source" "cloudfront_source" {
   name          = "Amazon Cloudfront"
   description   = "My description"
   category      = "aws/cloudfront"
@@ -57,9 +57,6 @@ In addition to the common properties, the following arguments are supported:
      + `type` - (Required) type of polling source. This has to be `S3BucketPathExpression` for `CloudFront` source.
      + `bucket_name` - (Required) The name of the bucket. This is needed if using type `S3BucketPathExpression`. 
      + `path_expression` - (Required) The path to the data. This is needed if using type `S3BucketPathExpression`.
-
-### See also
-  * [Common Source Properties](https://github.com/SumoLogic/terraform-provider-sumologic/tree/master/website#common-source-properties)
 
 ## Attributes Reference
 The following attributes are exported:

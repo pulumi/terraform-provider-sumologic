@@ -12,10 +12,10 @@ __IMPORTANT:__ The AWS credentials are stored in plain-text in the state. This i
 
 ## Example Usage
 ```hcl
-resource "sumologic_aws_xray_source" "terraform_aws_xray_source" {
+resource "sumologic_aws_xray_source" "aws_xray_source" {
   name          = "AWS XRay Metrics"
   description   = "My description"
-  category      = "aws/terraform_xray"
+  category      = "aws/xray"
   content_type  = "AwsXRay"
   scan_interval = 300000
   paused        = false
@@ -54,8 +54,6 @@ In addition to the common properties, the following arguments are supported:
      + `type` - (Required) type of polling source. This has to be `AwsXRayPath` for AWS XRay source.
      + `limit_to_regions` - (Optional) List of Amazon regions. 
 
-### See also
-  * [Common Source Properties](https://github.com/SumoLogic/terraform-provider-sumologic/tree/master/website#common-source-properties)
 
 ## Attributes Reference
 The following attributes are exported:

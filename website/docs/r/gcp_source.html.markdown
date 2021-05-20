@@ -11,7 +11,7 @@ Provides a [Sumo Logic Google Cloud Platform Source][2].
 ## Example Usage
 ```hcl
 
-resource "sumologic_gcp_source" "terraform_gcp_source" {
+resource "sumologic_gcp_source" "gcp_source" {
   name          = "GCP Source"
   description   = "My description"
   category      = "gcp"
@@ -30,9 +30,6 @@ resource "sumologic_collector" "collector" {
   description = "Just testing this"
 }
 ```
-
-## Argument reference
-  * [Common Source Properties](https://github.com/SumoLogic/terraform-provider-sumologic/tree/master/website#common-source-properties)
 
 ## Attributes Reference
 The following attributes are exported:

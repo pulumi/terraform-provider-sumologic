@@ -12,7 +12,7 @@ __IMPORTANT:__ The AWS credentials are stored in plain-text in the state. This i
 
 ## Example Usage
 ```hcl
-resource "sumologic_metadata_source" "terraform_metadata" {
+resource "sumologic_metadata_source" "metadata" {
   name          = "Metadata source"
   description   = "My description"
   category      = "aws/metadata"
@@ -59,7 +59,6 @@ In addition to the common properties, the following arguments are supported:
 
 ### See also
   * [Sumologic > Sources > Sources for Hosted Collectors > AWS > AWS Metadata (Tag) Source][3]
-  * [Common Source Properties][4]
 
 ## Attributes Reference
 The following attributes are exported:
@@ -83,4 +82,3 @@ terraform import sumologic_metadata_source.test my-test-collector/my-test-source
 [1]: https://help.sumologic.com/Send_Data/Sources/03Use_JSON_to_Configure_Sources/JSON_Parameters_for_Hosted_Sources
 [2]:https://help.sumologic.com/03Send-Data/Sources/02Sources-for-Hosted-Collectors/Amazon-Web-Services/AWS-Metadata-(Tag)-Source#Define_EC2_tag_filters
 [3]:https://help.sumologic.com/03Send-Data/Sources/02Sources-for-Hosted-Collectors/Amazon-Web-Services/AWS-Metadata-(Tag)-Source
-[4]:https://github.com/SumoLogic/terraform-provider-sumologic/tree/master/website#common-source-properties

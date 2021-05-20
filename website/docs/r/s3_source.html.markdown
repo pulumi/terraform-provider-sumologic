@@ -13,7 +13,7 @@ __IMPORTANT:__ The AWS credentials are stored in plain-text in the state. This i
 ## Example Usage
 ```hcl
 
-resource "sumologic_s3_source" "terraform_s3_source" {
+resource "sumologic_s3_source" "s3_source" {
   name          = "Amazon S3 Source"
   description   = "My description"
   category      = "aws/s3"

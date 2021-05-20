@@ -7,8 +7,7 @@ description: |-
 
 # sumologic_collector
 
-Provides a way to retrieve Sumo Logic collector details (id, names, etc) for a collector
-managed by another terraform stack.
+Provides a way to retrieve Sumo Logic collector details (id, names, etc) for a collector.
 
 
 ## Example Usage

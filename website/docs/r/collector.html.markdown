@@ -29,8 +29,6 @@ The following arguments are supported:
   * `timezone` - (Optional) The time zone to use for this collector. The value follows the [tzdata][2] naming convention.
   * `fields` - (Optional) Map containing [key/value pairs][3].
 
-### See also
-  * [Common Source Properties](https://github.com/SumoLogic/terraform-provider-sumologic/tree/master/website#common-source-properties)
 
 ## Attributes Reference
 The following attributes are exported:
@@ -53,4 +51,3 @@ terraform import sumologic_collector.test my_test_collector
 [1]: https://help.sumologic.com/Send_Data/Hosted_Collectors
 [2]: https://en.wikipedia.org/wiki/Tz_database
 [3]: https://help.sumologic.com/Manage/Fields
-[4]: https://www.terraform.io/docs/configuration/resources.html#prevent_destroy

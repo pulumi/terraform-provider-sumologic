@@ -45,8 +45,6 @@ In addition to the common properties, the following arguments are supported:
 - `message_per_request` - (Optional) When set to `true`, will create one log message per HTTP request.
 - `content_type`        - (Optional) When configuring a HTTP Traces Source, set this property to `Zipkin`. This should only be used when creating a Traces source.
 
-### See also
-  * [Common Source Properties](https://github.com/SumoLogic/terraform-provider-sumologic/tree/master/website#common-source-properties)
 
 ## Attributes Reference
 The following attributes are exported:

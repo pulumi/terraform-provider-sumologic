@@ -13,7 +13,7 @@ __IMPORTANT:__ The AWS credentials are stored in plain-text in the state. This i
 ## Example Usage
 ```hcl
 
-resource "sumologic_cloudtrail_source" "terraform_cloudtrail_source" {
+resource "sumologic_cloudtrail_source" "cloudtrail_source" {
   name          = "Amazon Cloultrail"
   description   = "My description"
   category      = "aws/cloudtrail"
@@ -58,8 +58,6 @@ In addition to the common properties, the following arguments are supported:
      + `bucket_name` - (Required) The name of the bucket.
      + `path_expression` - (Required) The path to the data.
 
-### See also
-  * [Common Source Properties](https://github.com/SumoLogic/terraform-provider-sumologic/tree/master/website#common-source-properties)
 
 ## Attributes Reference
 The following attributes are exported:

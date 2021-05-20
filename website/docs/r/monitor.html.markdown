@@ -13,7 +13,7 @@ Provides the ability to create, read, delete, and update [Monitors][1].
 
 ```hcl
 resource "sumologic_monitor" "tf_logs_monitor_1" {
-  name = "Terraform Logs Monitor"
+  name = "Logs Monitor"
   description = "tf logs monitor"
   type = "MonitorsLibraryMonitor"
   is_disabled = false
@@ -67,7 +67,7 @@ resource "sumologic_monitor" "tf_logs_monitor_1" {
 
 ```hcl
 resource "sumologic_monitor" "tf_metrics_monitor_1" {
-  name = "Terraform Metrics Monitor"
+  name = "Metrics Monitor"
   description = "tf metrics monitor"
   type = "MonitorsLibraryMonitor"
   is_disabled = false
@@ -112,7 +112,7 @@ resource "sumologic_monitor" "tf_metrics_monitor_1" {
 
 ```hcl
 resource "sumologic_monitor_folder" "tf_monitor_folder_1" {
-  name = "Terraform Managed Folder 1"
+  name = "Managed Folder 1"
   description = "A folder for Monitors"
 }
 
@@ -134,8 +134,8 @@ JSON
 }
 
 resource "sumologic_monitor" "tf_logs_monitor_2" {
-  name = "Terraform Logs Monitor with Webhook Connection"
-  description = "tf logs monitor with webhook"
+  name = "Logs Monitor with Webhook Connection"
+  description = "logs monitor with webhook"
   type = "MonitorsLibraryMonitor"
   parent_id = sumologic_monitor_folder.tf_monitor_folder_1.id
   is_disabled = false
@@ -200,7 +200,7 @@ NOTE: Monitor folders are considered a different resource from Library content f
 
 ```hcl
 resource "sumologic_monitor_folder" "tf_monitor_folder_1" {
-  name = "test terraform folder"
+  name = "test folder"
   description = "a folder for monitors"
 }
 ```

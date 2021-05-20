@@ -33,10 +33,10 @@ locals {
         }]
 }
 
-resource "sumologic_cloudwatch_source" "terraform_cloudwatch_source" {
+resource "sumologic_cloudwatch_source" "cloudwatch_source" {
   name          = "CloudWatch Metrics"
   description   = "My description"
-  category      = "aws/terraform_cw"
+  category      = "aws/cw"
   content_type  = "AwsCloudWatch"
   scan_interval = 300000
   paused        = false
@@ -90,9 +90,6 @@ In addition to the common properties, the following arguments are supported:
           + `type` - This value has to be set to `TagFilters`
           + `namespace` - Namespace for which you want to define the tag filters. Use  value as `All` to apply the tag filter for all namespaces.
           + `tags` - List of key-value pairs of tag filters. Eg: `["k3=v3"]`
-
-### See also
-  * [Common Source Properties](https://github.com/SumoLogic/terraform-provider-sumologic/tree/master/website#common-source-properties)
 
 ## Attributes Reference
 The following attributes are exported:

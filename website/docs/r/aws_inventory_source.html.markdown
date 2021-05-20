@@ -12,10 +12,10 @@ __IMPORTANT:__ The AWS credentials are stored in plain-text in the state. This i
 
 ## Example Usage
 ```hcl
-resource "sumologic_aws_inventory_source" "terraform_aws_inventory_source" {
+resource "sumologic_aws_inventory_source" "aws_inventory_source" {
   name          = "AWS Inventory"
   description   = "My description"
-  category      = "aws/terraform_aws_inventory"
+  category      = "aws/aws_inventory"
   content_type  = "AwsInventory"
   scan_interval = 300000
   paused        = false
@@ -66,9 +66,6 @@ In addition to the common properties, the following arguments are supported:
         + AWS/Elasticache
         + AWS/Redshift
         + AWS/Kinesis
-
-### See also
-  * [Common Source Properties](https://github.com/SumoLogic/terraform-provider-sumologic/tree/master/website#common-source-properties)
 
 ## Attributes Reference
 The following attributes are exported:
