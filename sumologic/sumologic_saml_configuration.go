@@ -86,4 +86,6 @@ type SamlConfiguration struct {
 	IsRedirectBinding            bool                         `json:"isRedirectBinding"`
 	Certificate                  string                       `json:"certificate,omitempty"`
 	ID                           string                       `json:"id,omitempty"`
+	AssertionConsumerUrl         string                       `json:"assertionConsumerUrl,omitempty"`
+	EntityId                     string                       `json:"entityId,omitempty"`
 }

@@ -106,6 +106,14 @@ func resourceSumologicSamlConfiguration() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"assertion_consumer_url": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"entity_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 		},
 	}
 }
@@ -206,6 +214,8 @@ func setSamlConfiguration(d *schema.ResourceData, samlConfiguration *SamlConfigu
 	d.Set("sign_authn_request", samlConfiguration.SignAuthnRequest)
 	d.Set("disable_requested_authn_context", samlConfiguration.DisableRequestedAuthnContext)
 	d.Set("is_redirect_binding", samlConfiguration.IsRedirectBinding)
+	d.Set("assertion_consumer_url", samlConfiguration.AssertionConsumerUrl)
+	d.Set("entity_id", samlConfiguration.EntityId)
 
 	d.Set("certificate", samlConfiguration.Certificate)
 }

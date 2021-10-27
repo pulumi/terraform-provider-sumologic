@@ -1,4 +1,113 @@
-## 2.9.4 (Unreleased)
+## 2.11.1 (Unreleased)
+
+## 2.11.0 (October 19, 2021)
+
+FEATURES:
+
+* **New Resource:** sumologic_cse_rule_tuning_expression (GH-281)
+* **New Resource:** sumologic_cse_entity_criticality_config (GH-275)
+* **New Resource:** sumologic_cse_custom_entity_type (GH-275)
+* **New Resource:** sumologic_cse_insights_resolution (GH-274)
+* **New Resource:** sumologic_cse_insights_status (GH-274)
+* **New Resource:** sumologic_cse_insights_configuration (GH-274)
+* **New Resource:** sumologic_cse_log_mapping (GH-284) 
+* **New Datasource:** sumologic_cse_log_mapping_vendor_product (GH-284)
+* **New Resource:** sumologic_cse_aggregation_rule (GH-290)
+* **New Resource:** sumologic_cse_chain_rule (GH-290)
+* **New Resource:** sumologic_cse_match_rule (GH-287)
+* **New Resource:** sumologic_cse_threshold_rule (GH-287)
+* **New Resource:** sumologic_cse_custom_insight (GH-289)
+
+BUG FIXES:
+
+* Fix hierarchy without a filter not being accepted
+
+## 2.10.0 (September 22, 2021)
+
+* Add a provider option `admin_mode`
+
+FEATURES:
+
+* **New Resource:** sumologic_hierarchy (GH-260)
+* **New Resource:** sumologic_cse_network_block (GH-271)
+
+POTENTIALLY BREAKING CHANGES:
+
+* resource/sumologic_policies: Changed all policies to be required. Configurations might need to be updated in
+  case some policies were not specified previously. (GH-279)
+
+DEPRECATIONS:
+
+* resource/sumologic_monitor: Deprecated `triggers` in favor of `trigger_conditions` (GH-267)
+
+## 2.9.10 (August 24, 2021)
+
+FEATURES:
+
+* **New Resource:** sumologic_policies (GH-248)
+* Add a new optional field `playbook` to resource/sumologic_monitor.
+* Add a new optional field `evaluation_delay` to resource/sumologic_monitor.
+
+## 2.9.9 (August 12, 2021)
+
+BUG FIXES:
+
+* resource/sumologic_monitor: Removed deprecation warning for `triggers`.
+* seperated docs for sumologic_monitor_folder from docs for sumologic_monitor.
+* resource/sumologic_monitor: Fixed docs for `trigger_conditions`.
+
+FEATURES:
+
+* Adding "entityId" as part of SAML API response object.
+
+## 2.9.8 (July 30, 2021)
+
+FEATURES:
+
+* Add support for ServiceNow Incident and Event webhook connection (GH-250)
+* Add support for new detection methods to sumologic_monitor (GH-239)
+
+DEPRECATIONS:
+
+* resource/sumologic_monitor: Deprecated `triggers` in favor of `trigger_conditions` (GH-239)
+
+BUG FIXES:
+
+* datasource/sumologic_http_source: fix int64 conversion for `collector_id` (GH-251)
+
+## 2.9.7 (July 22, 2021)
+
+ENHANCEMENTS:
+
+* Upgrade GoLang to support arm_64 (GH-241)
+
+## 2.9.6 (July 9, 2021)
+
+BUF FIXES:
+
+* Allow negative terse values for monitor threshold (GH-230)
+
+## 2.9.5 (July 8, 2021)
+
+ENHANCEMENTS:
+
+* Add validation for monitor resource (GH-223)
+
+BUG FIXES:
+
+* Set error message on failure for content resource (GH-224)
+
+## 2.9.4 (June 24, 2021)
+
+FEATURES:
+
+* **New Resource:** sumologic_token (GH-203)
+* **New Datasource:** sumologic_admin_recommended_folder (GH-215)
+
+ENHANCEMENTS:
+
+* Remove requirement of placeholder values for `path` and `authentication` for `sumologic_gcp_source` resource (GH-205)
+* Add assertion consumer url to terraform saml configuration (GH-200)
 
 ## 2.9.3 (April 26, 2021)
 
