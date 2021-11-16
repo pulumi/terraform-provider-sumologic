@@ -76,7 +76,7 @@ resource "sumologic_polling_source" "cw_metrics" {
     type = "CloudWatchPath"
     limit_to_regions = ["us-west-2"]
     limit_to_namespaces = ["AWS/Route53","AWS/S3","customNamespace"]
-  
+
     dynamic "tag_filters" {
     for_each = local.tagfilters
     content {
@@ -109,7 +109,7 @@ In addition to the common properties, the following arguments are supported:
      + `role_arn` - (Required) Your AWS role ARN if using type `AWSRoleBasedAuthentication`
  - `path` - (Required) The location to scan for new data.
      + `type` - (Required) type of polling source. Can be one of `S3BucketPathExpression` or  `CloudWatchPath`
-     + `bucket_name` - (Optional) The name of the bucket. This is needed if using type `S3BucketPathExpression`. 
+     + `bucket_name` - (Optional) The name of the bucket. This is needed if using type `S3BucketPathExpression`.
      + `path_expression` - (Optional) The path to the data. This is needed if using type `S3BucketPathExpression`.
      + `limit_to_regions` - (Optional) List of Amazon regions to limit metricscollection. This is a valid parameter if  using type `CloudWatchPath`.
      + `limit_to_namespaces` - (Optional) List of namespaces to limit metrics collection. By default all namespaces are selected. Details can be found [here](https://help.sumologic.com/03Send-Data/Sources/02Sources-for-Hosted-Collectors/Amazon-Web-Services/Amazon-CloudWatch-Source-for-Metrics#aws%C2%A0tag-filtering-namespace-support). You can also  specify custom namespace. This is a valid parameter if using type `CloudWatchPath`.

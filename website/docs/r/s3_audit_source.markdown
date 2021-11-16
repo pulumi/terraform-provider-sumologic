@@ -56,7 +56,7 @@ In addition to the common properties, the following arguments are supported:
      + `region` - (Optional) Your AWS Bucket region.
  - `path` - (Required) The location to scan for new data.
      + `type` - (Required) type of polling source. This has to be `S3BucketPathExpression` for `S3 Audit source`.
-     + `bucket_name` - (Required) The name of the bucket. 
+     + `bucket_name` - (Required) The name of the bucket.
      + `path_expression` - (Required) The path to the data.
 
 ## Attributes Reference

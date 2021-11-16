@@ -56,7 +56,7 @@ In addition to the common properties, the following arguments are supported:
      + `region` - (Optional) Your AWS Bucket region.
  - `path` - (Required) The location to scan for new data.
      + `type` - (Required) type of polling source. This has to be `S3BucketPathExpression` for `CloudFront` source.
-     + `bucket_name` - (Required) The name of the bucket. This is needed if using type `S3BucketPathExpression`. 
+     + `bucket_name` - (Required) The name of the bucket. This is needed if using type `S3BucketPathExpression`.
      + `path_expression` - (Required) The path to the data. This is needed if using type `S3BucketPathExpression`.
 
 ## Attributes Reference

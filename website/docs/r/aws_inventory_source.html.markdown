@@ -51,7 +51,7 @@ In addition to the common properties, the following arguments are supported:
      + `role_arn` - (Required) Your AWS role ARN. More details [here](https://help.sumologic.com/03Send-Data/Sources/02Sources-for-Hosted-Collectors/Amazon-Web-Services/Grant-Access-to-an-AWS-Product#iam-role).
  - `path` - (Required) The location to scan for new data.
      + `type` - (Required) type of polling source. This has to be `AwsInventoryPath` for AWS Inventory source.
-     + `limit_to_regions` - (Optional) List of Amazon regions. 
+     + `limit_to_regions` - (Optional) List of Amazon regions.
      + `limit_to_namespaces` - (Optional) List of namespaces. By default all namespaces are selected. You can also choose a subset from
         + AWS/EC2
         + AWS/AutoScaling
@@ -62,7 +62,7 @@ In addition to the common properties, the following arguments are supported:
         + AWS/Lambda
         + AWS/RDS
         + AWS/Dynamodb
-        + AWS/ECS 
+        + AWS/ECS
         + AWS/Elasticache
         + AWS/Redshift
         + AWS/Kinesis

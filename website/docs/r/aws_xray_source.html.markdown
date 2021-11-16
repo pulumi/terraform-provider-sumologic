@@ -52,7 +52,7 @@ In addition to the common properties, the following arguments are supported:
      + `role_arn` - (Required) Your AWS role ARN if using type `AWSRoleBasedAuthentication`
  - `path` - (Required) The location to scan for new data.
      + `type` - (Required) type of polling source. This has to be `AwsXRayPath` for AWS XRay source.
-     + `limit_to_regions` - (Optional) List of Amazon regions. 
+     + `limit_to_regions` - (Optional) List of Amazon regions.
 
 
 ## Attributes Reference

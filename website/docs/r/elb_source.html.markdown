@@ -2,7 +2,7 @@
 layout: "sumologic"
 page_title: "SumoLogic: sumologic_elb_source"
 description: |-
-  Provides a Sumologic ELB source. 
+  Provides a Sumologic ELB source.
 ---
 
 # sumologic_elb_source

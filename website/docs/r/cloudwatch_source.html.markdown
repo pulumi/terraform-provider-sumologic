@@ -17,7 +17,7 @@ locals {
     name        = "Exclude Comments"
     filter_type = "Exclude"
     regexp      = "#.*"
-  }] 
+  }]
   tagfilters = [{
           "type" = "TagFilters"
           "namespace" = "All"
@@ -51,7 +51,7 @@ resource "sumologic_cloudwatch_source" "cloudwatch_source" {
     type = "CloudWatchPath"
     limit_to_regions = ["us-west-2"]
     limit_to_namespaces = ["AWS/Route53","AWS/S3","customNamespace"]
-  
+
     dynamic "tag_filters" {
     for_each = local.tagfilters
     content {
@@ -85,7 +85,7 @@ In addition to the common properties, the following arguments are supported:
      + `region` - (Optional) Your AWS Bucket region.
  - `path` - (Required) The location to scan for new data.
      + `type` - (Required) type of polling source. This has to be `CloudWatchPath` for CloudWatch source.
-     + `limit_to_regions` - (Optional) List of Amazon regions. 
+     + `limit_to_regions` - (Optional) List of Amazon regions.
      + `limit_to_namespaces` - (Optional) List of namespaces. By default all namespaces are selected. Details can be found [here](https://help.sumologic.com/03Send-Data/Sources/02Sources-for-Hosted-Collectors/Amazon-Web-Services/Amazon-CloudWatch-Source-for-Metrics#aws%C2%A0tag-filtering-namespace-support). You can also  specify custom namespace.
      + `tag_filters` - (Optional) Tag filters allow you to filter the CloudWatch metrics you collect by the AWS tags you have assigned to your AWS resources. You can define tag filters for each supported namespace. If you do not define any tag filters, all metrics will be collected for the regions and namespaces you configured for the source above. More info on tag filters can be found [here](https://help.sumologic.com/03Send-Data/Sources/02Sources-for-Hosted-Collectors/Amazon-Web-Services/Amazon-CloudWatch-Source-for-Metrics#about-aws-tag-filtering)
           + `type` - This value has to be set to `TagFilters`

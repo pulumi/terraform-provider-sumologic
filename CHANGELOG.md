@@ -1,5 +1,14 @@
 ## 2.11.1 (Unreleased)
 
+FEATURES:
+
+* **New Datasource:** sumologic_user (GH-299)
+
+BUG FIXES:
+ 
+* Fix occurrence_type for metrics resolution conditions (GH-297)
+* Relaxed validation for monitor time range (GH-306)
+
 ## 2.11.0 (October 19, 2021)
 
 FEATURES:
