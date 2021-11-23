@@ -1,4 +1,24 @@
-## 2.11.1 (Unreleased)
+## 2.12.0 (Unreleased)
+
+## 2.11.4 (November 19, 2021)
+
+BUG FIXES:
+
+* Fix unexpected end of JSON input error in folder and dashboard resources (GH-319)
+
+## 2.11.3 (November 17, 2021)
+
+BUG FIXES:
+
+* Fix provider crash when user / role data source is declared with a non-existent identifier (GH-316)
+
+## 2.11.2 (November 11, 2021)
+
+ENHANCEMENTS:
+
+* Add support for SNS subscription in polling sources (GH-311)
+
+## 2.11.1 (November 8, 2021)
 
 FEATURES:
 

@@ -43,7 +43,7 @@ resource "sumologic_collector" "collector" {
 
 ## Argument reference
 
-In addition to the common properties, the following arguments are supported:
+In addition to the [Common Source Properties](https://registry.terraform.io/providers/SumoLogic/sumologic/latest/docs#common-source-properties), the following arguments are supported:
 
  - `content_type` - (Required) The content-type of the collected data. Details can be found in the [Sumologic documentation for hosted sources][1].
  - `scan_interval` - (Required) Time interval in milliseconds of scans for new data. The default is 300000 and the minimum value is 1000 milliseconds.
@@ -58,6 +58,7 @@ In addition to the common properties, the following arguments are supported:
      + `type` - (Required) type of polling source. This has to be `S3BucketPathExpression` for `S3 Audit source`.
      + `bucket_name` - (Required) The name of the bucket.
      + `path_expression` - (Required) The path to the data.
+     + `sns_topic_or_subscription_arn` - (Computed) This is a computed field for SNS topic/subscription ARN.
 
 ## Attributes Reference
 The following attributes are exported:

@@ -41,7 +41,7 @@ resource "sumologic_collector" "collector" {
 
 ## Argument reference
 
-In addition to the common properties, the following arguments are supported:
+In addition to the [Common Source Properties](https://registry.terraform.io/providers/SumoLogic/sumologic/latest/docs#common-source-properties), the following arguments are supported:
 
  - `content_type` - (Required) The content-type of the collected data. For Metadata source this is `AwsMetadata`. Details can be found in the [Sumologic documentation for hosted sources][1].
  - `scan_interval` - (Required) Time interval in milliseconds of scans for new data. The default is 300000 and the minimum value is 1000 milliseconds.
@@ -55,7 +55,7 @@ In addition to the common properties, the following arguments are supported:
  - `path` - (Required) The location to scan for new data.
      + `type` - (Required) type of polling source. Only allowed value is `AwsMetadataPath`.
      + `limit_to_regions` - (Optional) List of Amazon regions.
-     + `limit_to_namespaces` - List of namespaces. For `AwsMetadataPath` the only valid namespace is `AWS/EC2`. 
+     + `limit_to_namespaces` - List of namespaces. For `AwsMetadataPath` the only valid namespace is `AWS/EC2`.
      + `tag_filters` - (Optional) Leave this field blank to collect all tags configured for the EC2 instance. To collect a subset of tags, follow the instructions in [Define EC2 tag filters][2]
 
 ### See also
