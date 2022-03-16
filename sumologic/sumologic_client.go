@@ -2,6 +2,7 @@ package sumologic
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -10,6 +11,8 @@ import (
 	"net/http"
 	"net/url"
 	"time"
+
+	"github.com/hashicorp/go-retryablehttp"
 )
 
 type HttpClient interface {
@@ -29,16 +32,15 @@ type Client struct {
 var ProviderVersion string
 
 var endpoints = map[string]string{
-	"us1":  "https://api.sumologic.com/api/",
-	"us2":  "https://api.us2.sumologic.com/api/",
-	"fed":  "https://api.fed.sumologic.com/api/",
-	"eu":   "https://api.eu.sumologic.com/api/",
-	"au":   "https://api.au.sumologic.com/api/",
-	"de":   "https://api.de.sumologic.com/api/",
-	"jp":   "https://api.jp.sumologic.com/api/",
-	"ca":   "https://api.ca.sumologic.com/api/",
-	"in":   "https://api.in.sumologic.com/api/",
-	"nite": "https://nite-api.sumologic.net/api/",
+	"us1": "https://api.sumologic.com/api/",
+	"us2": "https://api.us2.sumologic.com/api/",
+	"fed": "https://api.fed.sumologic.com/api/",
+	"eu":  "https://api.eu.sumologic.com/api/",
+	"au":  "https://api.au.sumologic.com/api/",
+	"de":  "https://api.de.sumologic.com/api/",
+	"jp":  "https://api.jp.sumologic.com/api/",
+	"ca":  "https://api.ca.sumologic.com/api/",
+	"in":  "https://api.in.sumologic.com/api/",
 }
 
 var rateLimiter = time.NewTicker(time.Minute / 240)
@@ -298,12 +300,26 @@ func (s *Client) Delete(urlPath string) ([]byte, error) {
 	return d, nil
 }
 
+func checkRetry(ctx context.Context, resp *http.Response, err error) (bool, error) {
+	// only retry on 429
+	if err == nil && resp.StatusCode == http.StatusTooManyRequests {
+		return true, nil
+	}
+	return false, nil
+}
+
 func NewClient(accessID, accessKey, authJwt, environment, base_url string, admin bool) (*Client, error) {
+	retryClient := retryablehttp.NewClient()
+	retryClient.RetryMax = 10
+	retryClient.CheckRetry = checkRetry
+	// Disable DEBUG logs (https://github.com/hashicorp/go-retryablehttp/issues/31)
+	retryClient.Logger = nil
+
 	client := Client{
 		AccessID:      accessID,
 		AccessKey:     accessKey,
 		AuthJwt:       authJwt,
-		httpClient:    http.DefaultClient,
+		httpClient:    retryClient.StandardClient(),
 		Environment:   environment,
 		IsInAdminMode: admin,
 	}

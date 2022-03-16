@@ -1,4 +1,27 @@
-## 2.12.0 (Unreleased)
+## 2.14.0 (Unreleased)
+
+## 2.13.0 (February 24, 2022)
+
+FEATURES:
+* **New Resource:** sumologic_content_permission (GH-340)
+
+ENHANCEMENTS:
+* Add support for importing folder resource (GH-345)
+* Allow AtLeastOnce resolution conditions for Metrics monitors  (GH-346)
+
+## 2.12.0 (February 7, 2022)
+
+FEATURES:
+* **New Resource:** Gcp Metrics Source `sumologic_gcp_metrics_source` (GH-329, 332)
+
+ENHANCEMENTS:
+* Add support for OTLP in HTTP source resource (GH-335)
+* Add backoff on http 429s (GH-338)
+* Add `domain` field to the dashboard resource (GH-341)
+
+BUG FIXES:
+* Fix to allow more than one topology_label for Dashboard resource (GH-336)
+* sumologic_cse_log_mapping split_index as int (GH-333)
 
 ## 2.11.5 (December 14, 2021)
 
