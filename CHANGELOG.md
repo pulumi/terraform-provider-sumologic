@@ -1,4 +1,27 @@
-## 2.15.0 (Unreleased)
+## 2.17.0 (Unreleased)
+
+
+## 2.16.0 (May 20, 2022)
+
+FEATURES: 
+* Add new optional `obj_permission` set to resource/sumologic_monitor_folder for Fine Grain Permission (FGP) support (GH-373)
+
+BUG FIXES:
+* Fix bug in cse match list items creation (was timing out due to StateChangeConf on an infinite loop) (GH-377)
+
+## 2.15.0 (May 13, 2022)
+
+FEATURES:
+* **New Data Source:** `sumologic_folder` (GH-374)
+* **New Resource:** `sumologic_slo` (GH-362)
+* **New Resource:** `sumologic_slo_folder` (GH-362)
+* Add support for slo based monitors (GH-363)
+* Add new optional `alert_name` field to resource/sumologic_monitor (GH-359)
+
+
+BUG FIXES:
+* Add CRITICAL as a valid value for cse_custom_insight severity field (GH-367)
+* Fix bug preventing to create more than 100 cse match list items within a cs_match_list (GH-368)
 
 ## 2.14.0 (March 30, 2022)
 
