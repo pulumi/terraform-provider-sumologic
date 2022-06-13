@@ -1,6 +1,16 @@
 ## 2.17.0 (Unreleased)
 
 
+## 2.16.2 (June 12, 2022)
+
+BUG FIXES:
+* Monitor Folder provider now handles more error codes: "api_not_enabled", in addition to: "not_implemented_yet" (GH-389) 
+
+## 2.16.1 (June 6, 2022)
+
+BUG FIXES:
+* Allow locator field in DefaultDateFormat to be empty (GH-384)
+
 ## 2.16.0 (May 20, 2022)
 
 FEATURES: 
