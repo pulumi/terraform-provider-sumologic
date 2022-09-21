@@ -254,8 +254,9 @@ func resourceSumologicMonitorsLibraryMonitor() *schema.Resource {
 										Optional: true,
 									},
 									"payload_override": {
-										Type:     schema.TypeString,
-										Optional: true,
+										Type:         schema.TypeString,
+										Optional:     true,
+										ValidateFunc: validation.StringIsJSON,
 									},
 								},
 							},
@@ -272,8 +273,9 @@ func resourceSumologicMonitorsLibraryMonitor() *schema.Resource {
 			},
 
 			"description": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validation.StringMatch(regexp.MustCompile(`(?s)^[^\ ].*[^\ ]$`), "description must not contain leading or trailing spaces"),
 			},
 
 			"created_at": {
@@ -328,8 +330,9 @@ func resourceSumologicMonitorsLibraryMonitor() *schema.Resource {
 			},
 
 			"name": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:         schema.TypeString,
+				Required:     true,
+				ValidateFunc: validation.StringMatch(regexp.MustCompile(`(?s)^[^\ ].*[^\ ]$`), "name must not contain leading or trailing spaces"),
 			},
 
 			"post_request_map": {
@@ -1448,11 +1451,15 @@ func (condition *TriggerCondition) readFrom(block map[string]interface{}) {
 // Clones the TriggerCondition with fields from nested blocks.
 // Expects the following nested block structure:
 // +-critical
-//  +-alert
-//  +-resolution
+//
+//	+-alert
+//	+-resolution
+//
 // +-warning
-//  +-alert
-//  +-resolution
+//
+//	+-alert
+//	+-resolution
+//
 // Adds any 'flat' fields appear at a level to the trigger condition, as per the mapping defined in [[readFrom]].
 func (base TriggerCondition) cloneReadingFromNestedBlocks(block map[string]interface{}) []TriggerCondition {
 	var conditions = []TriggerCondition{}

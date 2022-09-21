@@ -1,3 +1,22 @@
+## 2.19.1 (Unreleased)
+
+## 2.19.0 (September 20, 2022)
+FEATURES:
+* **New Resource:** sumologic_cse_entity_normalization_configuration (GH-430)
+
+ENHANCEMENTS:
+* Updated maxdepth level for hierarchy resource (GH-433)
+
+## 2.18.2 (September 1, 2022)
+BUG FIXES:
+* Fix bug for validation for monitor name and description regex (GH-428)
+
+## 2.18.1 (August 31, 2022)
+
+BUG FIXES:
+* Fix compliance period validation for SLOs (GH-424)
+* Adding validations for name, description and payload_override in monitors (GH-420)
+
 ## 2.18.0 (August 8, 2022)
 
 FEATURES:

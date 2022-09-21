@@ -5,19 +5,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"log"
-	"regexp"
+	"strings"
 )
 
-const sloAggregationRegexString = `^(Avg|Min|Max|Sum|(p[5-9][0-9])(\.\d{1,3})?$)$` // TODO update it to allow lower pct values
-const sloAggregationWindowRegexString = `^[0-9]{1,2}(m|h)$`                        // TODO make it exact of min 1m and max 1h
 const fieldNameWindowBasedEvaluation = `window_based_evaluation`
 const fieldNameRequestBasedEvaluation = `request_based_evaluation`
 const sloContentTypeString = "Slo"
 
 func resourceSumologicSLO() *schema.Resource {
-
-	aggrRegex := regexp.MustCompile(sloAggregationRegexString)
-	windowRegex := regexp.MustCompile(sloAggregationWindowRegexString)
 
 	queryGroupElemSchema := &schema.Resource{
 		Schema: map[string]*schema.Schema{
@@ -111,14 +106,12 @@ func resourceSumologicSLO() *schema.Resource {
 				}, false),
 			},
 			"aggregation": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ValidateFunc: validation.StringMatch(aggrRegex, `value must match : `+sloAggregationRegexString),
+				Type:     schema.TypeString,
+				Optional: true,
 			},
 			"size": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ValidateFunc: validation.StringMatch(windowRegex, `value must match : `+sloAggregationWindowRegexString),
+				Type:     schema.TypeString,
+				Required: true,
 			},
 		},
 	}
@@ -208,12 +201,9 @@ func resourceSumologicSLO() *schema.Resource {
 							Required: true,
 						},
 						"size": {
-							Type:     schema.TypeString,
-							Required: true,
-							ValidateFunc: validation.StringInSlice([]string{
-								"Week", "Month", "Quarter",
-								"1d", "2d", "3d", "4d", "5d", "6d", "7d", "8d", "9d", "10d", "11d", "12d", "13d", "14d",
-							}, false),
+							Type:         schema.TypeString,
+							Required:     true,
+							ValidateFunc: validateSLOComplianceSize,
 						},
 						"start_from": {
 							Type:     schema.TypeString,
@@ -691,4 +681,37 @@ func verifySLOObject(slo SLOLibrarySLO) error {
 		}
 	}
 	return nil
+}
+
+// lintignore:V013
+func validateSLOComplianceSize(i interface{}, k string) (warnings []string, errors []error) {
+	v, ok := i.(string)
+	if !ok {
+		errors = append(errors, fmt.Errorf("expected type of %s to be string", k))
+		return warnings, errors
+	}
+
+	var validPeriods []string
+
+	calendarPeriods := []string{"Week", "Month", "Quarter"}
+	for _, calendarPeriod := range calendarPeriods {
+		validPeriods = append(validPeriods, calendarPeriod)
+	}
+
+	minRollingDays := 1
+	maxRollingDays := 90
+	for days := minRollingDays; days <= maxRollingDays; days++ {
+		validPeriods = append(validPeriods, fmt.Sprintf("%dd", days))
+	}
+
+	for _, validPeriod := range validPeriods {
+		if v == validPeriod {
+			return warnings, errors
+		}
+	}
+
+	errorMessage := "compliance period must be " + strings.Join(calendarPeriods, ", ") + " or " +
+		fmt.Sprintf("%dd...%dd", minRollingDays, maxRollingDays)
+
+	return warnings, append(errors, fmt.Errorf(errorMessage))
 }
