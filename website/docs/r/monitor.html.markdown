@@ -285,6 +285,7 @@ resource "sumologic_monitor" "tf_logs_monitor_2" {
         resolution {
           threshold      = 40.0
           threshold_type = "LessThanOrEqual"
+          resolution_window = "5m"
         }
       }
     }
@@ -351,15 +352,22 @@ The following arguments are supported:
   - `Logs`: A logs query monitor.
   - `Metrics`: A metrics query monitor.
   - `Slo`: A SLO based monitor  (beta).
+- `evaluation_delay` - (Optional) Evaluation delay as a string consists of the following elements:
+      1. `<number>`: number of time units,
+      2. `<time_unit>`: time unit; possible values are: `h` (hour), `m` (minute), `s` (second).
+
+      Multiple pairs of `<number><time_unit>` may be provided. For example,
+      `2m50s` means 2 minutes and 50 seconds.
 - `slo_id` - (Optional) Identifier of the SLO definition for the monitor. This is only applicable & required for Slo `monitor_type`.
 - `queries` - (Required) All queries from the monitor.
 - `trigger_conditions` - (Required if not using `triggers`) Defines the conditions of when to send notifications. NOTE: `trigger_conditions` supplants the `triggers` argument. 
+  - `resolution_window` - The resolution window that the recovery condition must be met in each evaluation that happens within this entire duration before the alert is recovered (resolved). If not specified, the time range of your trigger will be used.
 - `triggers` - (Deprecated) Defines the conditions of when to send notifications.
 - `notifications` - (Optional) The notifications the monitor will send when the respective trigger condition is met.
 - `group_notifications` - (Optional) Whether or not to group notifications for individual items that meet the trigger condition. Defaults to true.
 - `playbook` - (Optional - Beta) Notes such as links and instruction to help you resolve alerts triggered by this monitor. {{Markdown}} supported. It will be enabled only if available for your organization. Please contact your Sumo Logic account team to learn more.
-- `alert_name` - (Optional) The display name when creating alerts. Monitor name will be used if `alert_name` is not provided. All template variables can be used in `alert_name` except `{{AlertName}}`, `{{AlertResponseURL}}` and `{{ResultsJson}}`.
-- `notification_group_fields` - (Optional - Beta) The set of fields to be used to group alerts and notifications for a monitor. The value of this field will be considered only when 'groupNotifications' is true.
+- `alert_name` - (Optional) The display name when creating alerts. Monitor name will be used if `alert_name` is not provided. All template variables can be used in `alert_name` except `{{AlertName}}`, `{{AlertResponseURL}}`, `{{ResultsJson}}`, and `{{Playbook}}`.
+- `notification_group_fields` - (Optional) The set of fields to be used to group alerts and notifications for a monitor. The value of this field will be considered only when 'groupNotifications' is true.
 - `obj_permission` - (Optional) `obj_permission` construct represents a Permission Statement associated with this Monitor. A set of `obj_permission` constructs can be specified under a Monitor. An `obj_permission` construct can be used to control permissions Explicitly associated with a Monitor. But, it cannot be used to control permissions Inherited from a Parent / Ancestor. Default FGP would be still set to the Monitor upon creation (e.g. the creating user would have full permission), even if no `obj_permission` construct is specified at a Monitor and the FGP feature is enabled at the account.
     - `subject_type` - (Required) Valid values:
         - `role`
@@ -397,6 +405,7 @@ trigger_conditions {
       resolution {
         threshold = 90
         threshold_type = "LessThanOrEqual"
+        resolution_window = "5m"
       }
     }
     warning {
@@ -408,6 +417,7 @@ trigger_conditions {
       resolution {
         threshold = 75
         threshold_type = "LessThanOrEqual"
+        resolution_window = "5m"
       }
     }
   }
@@ -433,24 +443,26 @@ Here is a summary of arguments for each condition type (fields which are not mar
 #### logs_static_condition
   - `field`
   - `critical`
-    - `time_range` (Required)
+    - `time_range` (Required) : Accepted format: Optional `-` sign followed by `<number>` followed by a `<time_unit>` character: `s` for seconds, `m` for minutes, `h` for hours, `d` for days. Examples: `30m`, `-12h`.
     - `alert` (Required)
       - `threshold`
       - `threshold_type`
     - `resolution` (Required)
       - `threshold`
       - `threshold_type`
+      - `resolution_window` Accepted format: `<number>` followed by a `<time_unit>` character: `s` for seconds, `m` for minutes, `h` for hours, `d` for days. Examples: `0s, 30m`.
   - `warning`
-    - `time_range` (Required)
+    - `time_range` (Required) :  Accepted format: Optional `-` sign followed by `<number>` followed by a `<time_unit>` character: `s` for seconds, `m` for minutes, `h` for hours, `d` for days. Examples: `30m`, `-12h`.
     - `alert` (Required)
       - `threshold`
       - `threshold_type`
     - `resolution` (Required)
       - `threshold`
       - `threshold_type`
+      - `resolution_window` Accepted format: `<number>` followed by a `<time_unit>` character: `s` for seconds, `m` for minutes, `h` for hours, `d` for days. Examples: `0s, 30m`.
 #### metrics_static_condition
   - `critical`
-    - `time_range` (Required)
+    - `time_range` (Required) :  Accepted format: Optional `-` sign followed by `<number>` followed by a `<time_unit>` character: `s` for seconds, `m` for minutes, `h` for hours, `d` for days. Examples: `30m`, `-12h`.
     - `occurrence_type` (Required)
     - `alert` (Required)
       - `threshold`
@@ -459,7 +471,7 @@ Here is a summary of arguments for each condition type (fields which are not mar
       - `threshold`
       - `threshold_type`
   - `warning`
-    - `time_range` (Required)
+    - `time_range` (Required) :  Accepted format: Optional `-` sign followed by `<number>` followed by a `<time_unit>` character: `s` for seconds, `m` for minutes, `h` for hours, `d` for days. Examples: `30m`, `-12h`.
     - `occurrence_type` (Required)
     - `alert` (Required)
       - `threshold`
@@ -487,10 +499,9 @@ Here is a summary of arguments for each condition type (fields which are not mar
     - `baseline_window`
     - `threshold`
 #### logs_missing_data_condition
-  - `time_range` (Required)
+  - `time_range` (Required) :  Accepted format: Optional `-` sign followed by `<number>` followed by a `<time_unit>` character: `s` for seconds, `m` for minutes, `h` for hours, `d` for days. Examples: `30m`, `-12h`.
 #### metrics_missing_data_condition
-  - `time_range` (Required)
-  - `trigger_source` (Required)
+  - `time_range` (Required) :  Accepted format: Optional `-` sign followed by `<number>` followed by a `<time_unit>` character: `s` for seconds, `m` for minutes, `h` for hours, `d` for days. Examples: `30m`, `-12h`.
 #### slo_sli_condition
   - `critical`
     - `sli_threshold` (Required) : The remaining SLI error budget threshold percentage [0,100).
@@ -499,10 +510,10 @@ Here is a summary of arguments for each condition type (fields which are not mar
   
 #### slo_burn_rate_condition
   - `critical`
-    - `time_range` (Required) : The relative time range for the burn rate percentage evaluation.
+    - `time_range` (Required) : The relative time range for the burn rate percentage evaluation.  Accepted format: Optional `-` sign followed by `<number>` followed by a `<time_unit>` character: `s` for seconds, `m` for minutes, `h` for hours, `d` for days. Examples: `30m`, `-12h`.
     - `burn_rate_threshold` (Required) : The burn rate percentage threshold.
   - `warning`
-    - `time_range` (Required)
+    - `time_range` (Required) :  Accepted format: Optional `-` sign followed by `<number>` followed by a `<time_unit>` character: `s` for seconds, `m` for minutes, `h` for hours, `d` for days. Examples: `30m`, `-12h`.
     - `burn_rate_threshold` (Required)
 
 ## The `triggers` block
@@ -538,6 +549,7 @@ resource "sumologic_monitor" "tf_logs_monitor_1" {
     trigger_source   = "AllResults"
     trigger_type     = "ResolvedCritical"
     detection_method = "StaticCondition"
+    resolution_window = "5m"
   }
   notifications {
     notification {

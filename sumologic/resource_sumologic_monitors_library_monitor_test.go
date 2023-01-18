@@ -106,6 +106,24 @@ func TestAccSumologicMonitorsLibraryMonitor_schemaValidations(t *testing.T) {
 	})
 }
 
+func TestAccSumologicMonitorsLibraryMonitor_triggersTimeRangeDiffSuppression(t *testing.T) {
+	var monitorsLibraryMonitor MonitorsLibraryMonitor
+	canonicalTimeRange := "1h"
+
+	resource.Test(t, resource.TestCase{
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckMonitorsLibraryMonitorDestroy(monitorsLibraryMonitor),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccSumologicMonitorsLibraryMonitor("triggers_negative_expanded_hour"),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("sumologic_monitor.test", "triggers.0.time_range", canonicalTimeRange),
+				),
+			},
+		},
+	})
+}
+
 func TestAccSumologicMonitorsLibraryMonitor_basic(t *testing.T) {
 	var monitorsLibraryMonitor MonitorsLibraryMonitor
 	testNameSuffix := acctest.RandString(16)
@@ -138,7 +156,7 @@ func TestAccSumologicMonitorsLibraryMonitor_create(t *testing.T) {
 	testContentType := "Monitor"
 	testMonitorType := "Logs"
 	testIsDisabled := false
-	testEvaluationDelay := "5m"
+	canonicalTestEvaluationDelay := "1h"
 	testQueries := []MonitorQuery{
 		{
 			RowID: "A",
@@ -149,20 +167,21 @@ func TestAccSumologicMonitorsLibraryMonitor_create(t *testing.T) {
 		{
 			ThresholdType:   "GreaterThan",
 			Threshold:       40.0,
-			TimeRange:       "15m",
+			TimeRange:       "1h",
 			OccurrenceType:  "ResultCount",
 			TriggerSource:   "AllResults",
 			TriggerType:     "Critical",
 			DetectionMethod: "StaticCondition",
 		},
 		{
-			ThresholdType:   "LessThanOrEqual",
-			Threshold:       40.0,
-			TimeRange:       "15m",
-			OccurrenceType:  "ResultCount",
-			TriggerSource:   "AllResults",
-			TriggerType:     "ResolvedCritical",
-			DetectionMethod: "StaticCondition",
+			ThresholdType:    "LessThanOrEqual",
+			Threshold:        40.0,
+			TimeRange:        "1h",
+			OccurrenceType:   "ResultCount",
+			TriggerSource:    "AllResults",
+			TriggerType:      "ResolvedCritical",
+			DetectionMethod:  "StaticCondition",
+			ResolutionWindow: "5m",
 		},
 	}
 	recipients := []string{"abc@example.com"}
@@ -206,17 +225,61 @@ func TestAccSumologicMonitorsLibraryMonitor_create(t *testing.T) {
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "name", testName),
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "type", testType),
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "description", testDescription),
-					resource.TestCheckResourceAttr("sumologic_monitor.test", "evaluation_delay", testEvaluationDelay),
+					resource.TestCheckResourceAttr("sumologic_monitor.test", "evaluation_delay", canonicalTestEvaluationDelay),
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "content_type", testContentType),
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "queries.0.row_id", testQueries[0].RowID),
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "triggers.0.trigger_type", testTriggers[0].TriggerType),
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "triggers.0.time_range", testTriggers[0].TimeRange),
+					resource.TestCheckResourceAttr("sumologic_monitor.test", "triggers.1.resolution_window", testTriggers[1].ResolutionWindow),
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "notifications.0.notification.0.connection_type", testNotifications[0].Notification.(EmailNotification).ConnectionType),
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "alert_name", testAlertName),
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "notification_group_fields.0", testGroupFields[0]),
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "notification_group_fields.1", testGroupFields[1]),
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "obj_permission.#", "2"),
 					testAccCheckMonitorsLibraryMonitorFGPBackend("sumologic_monitor.test", t, genExpectedPermStmtsMonitor),
+				),
+			},
+		},
+	})
+}
+
+func TestAccSumologicMonitorsLibraryMonitor_create_with_no_resolution_window(t *testing.T) {
+	var monitorsLibraryMonitor MonitorsLibraryMonitor
+	testNameSuffix := acctest.RandString(16)
+
+	testTriggers := []TriggerCondition{
+		{
+			ThresholdType:   "GreaterThan",
+			Threshold:       40.0,
+			TimeRange:       "15m",
+			OccurrenceType:  "ResultCount",
+			TriggerSource:   "AllResults",
+			TriggerType:     "Critical",
+			DetectionMethod: "StaticCondition",
+		},
+		{
+			ThresholdType:   "LessThanOrEqual",
+			Threshold:       40.0,
+			TimeRange:       "15m",
+			OccurrenceType:  "ResultCount",
+			TriggerSource:   "AllResults",
+			TriggerType:     "ResolvedCritical",
+			DetectionMethod: "StaticCondition",
+		},
+	}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckMonitorsLibraryMonitorDestroy(monitorsLibraryMonitor),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccSumologicMonitorsLibraryMonitorWithNoResolutionWindow(testNameSuffix),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckMonitorsLibraryMonitorExists("sumologic_monitor.test", &monitorsLibraryMonitor, t),
+					testAccCheckMonitorsLibraryMonitorAttributes("sumologic_monitor.test"),
+					resource.TestCheckResourceAttr("sumologic_monitor.test", "triggers.0.trigger_type", testTriggers[0].TriggerType),
+					resource.TestCheckResourceAttr("sumologic_monitor.test", "triggers.0.time_range", testTriggers[0].TimeRange),
 				),
 			},
 		},
@@ -260,7 +323,7 @@ func TestAccSumologicMonitorsLibraryMonitor_update(t *testing.T) {
 	testMonitorType := "Logs"
 	testPlaybook := "This is a test playbook"
 	testIsDisabled := false
-	testEvaluationDelay := "5m"
+	canonicalTestEvaluationDelay := "1h"
 	testQueries := []MonitorQuery{
 		{
 			RowID: "A",
@@ -271,20 +334,21 @@ func TestAccSumologicMonitorsLibraryMonitor_update(t *testing.T) {
 		{
 			ThresholdType:   "GreaterThan",
 			Threshold:       40.0,
-			TimeRange:       "15m",
+			TimeRange:       "1h",
 			OccurrenceType:  "ResultCount",
 			TriggerSource:   "AllResults",
 			TriggerType:     "Critical",
 			DetectionMethod: "StaticCondition",
 		},
 		{
-			ThresholdType:   "LessThanOrEqual",
-			Threshold:       40.0,
-			TimeRange:       "15m",
-			OccurrenceType:  "ResultCount",
-			TriggerSource:   "AllResults",
-			TriggerType:     "ResolvedCritical",
-			DetectionMethod: "StaticCondition",
+			ThresholdType:    "LessThanOrEqual",
+			Threshold:        40.0,
+			TimeRange:        "1h",
+			OccurrenceType:   "ResultCount",
+			TriggerSource:    "AllResults",
+			TriggerType:      "ResolvedCritical",
+			DetectionMethod:  "StaticCondition",
+			ResolutionWindow: "5m",
 		},
 	}
 	recipients := []string{"abc@example.com"}
@@ -339,13 +403,14 @@ func TestAccSumologicMonitorsLibraryMonitor_update(t *testing.T) {
 			DetectionMethod: "StaticCondition",
 		},
 		{
-			ThresholdType:   "LessThanOrEqual",
-			Threshold:       40.0,
-			TimeRange:       "30m",
-			OccurrenceType:  "ResultCount",
-			TriggerSource:   "AllResults",
-			TriggerType:     "ResolvedCritical",
-			DetectionMethod: "StaticCondition",
+			ThresholdType:    "LessThanOrEqual",
+			Threshold:        40.0,
+			TimeRange:        "30m",
+			OccurrenceType:   "ResultCount",
+			TriggerSource:    "AllResults",
+			TriggerType:      "ResolvedCritical",
+			DetectionMethod:  "StaticCondition",
+			ResolutionWindow: "15m",
 		},
 	}
 	updatedRecipients := []string{"abc@example.com"}
@@ -389,11 +454,12 @@ func TestAccSumologicMonitorsLibraryMonitor_update(t *testing.T) {
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "name", testName),
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "type", testType),
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "description", testDescription),
-					resource.TestCheckResourceAttr("sumologic_monitor.test", "evaluation_delay", testEvaluationDelay),
+					resource.TestCheckResourceAttr("sumologic_monitor.test", "evaluation_delay", canonicalTestEvaluationDelay),
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "content_type", testContentType),
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "queries.0.row_id", testQueries[0].RowID),
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "triggers.0.trigger_type", testTriggers[0].TriggerType),
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "triggers.0.time_range", testTriggers[0].TimeRange),
+					resource.TestCheckResourceAttr("sumologic_monitor.test", "triggers.1.resolution_window", testTriggers[1].ResolutionWindow),
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "notifications.0.notification.0.connection_type", testNotifications[0].Notification.(EmailNotification).ConnectionType),
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "playbook", testPlaybook),
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "alert_name", testAlertName),
@@ -416,6 +482,7 @@ func TestAccSumologicMonitorsLibraryMonitor_update(t *testing.T) {
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "queries.0.row_id", testUpdatedQueries[0].RowID),
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "triggers.0.trigger_type", testUpdatedTriggers[0].TriggerType),
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "triggers.0.time_range", testUpdatedTriggers[0].TimeRange),
+					resource.TestCheckResourceAttr("sumologic_monitor.test", "triggers.1.resolution_window", testUpdatedTriggers[1].ResolutionWindow),
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "notifications.0.notification.0.connection_type", testUpdatedNotifications[0].Notification.(EmailNotification).ConnectionType),
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "playbook", testUpdatedPlaybook),
 					resource.TestCheckResourceAttr("sumologic_monitor.test", "alert_name", testUpdatedAlertName),
@@ -482,7 +549,7 @@ func TestAccSumologicMonitorsLibraryMonitor_driftingCorrectionFGP(t *testing.T) 
 	})
 }
 
-func TestAccSumologicMonitorsLibraryMonitor_update_folder(t *testing.T) {
+func TestAccSumologicMonitorsLibraryMonitor_folder_update(t *testing.T) {
 	var monitorsLibraryMonitor MonitorsLibraryMonitor
 	testNameSuffix := acctest.RandString(16)
 
@@ -648,7 +715,7 @@ resource "sumologic_monitor" "test" {
 	is_disabled = false
 	content_type = "Monitor"
 	monitor_type = "Logs"
-	evaluation_delay = "5m"
+	evaluation_delay = "60m"
 	queries {
 		row_id = "A"
 		query = "_sourceCategory=monitor-manager error"
@@ -656,7 +723,7 @@ resource "sumologic_monitor" "test" {
 	triggers  {
 		threshold_type = "GreaterThan"
 		threshold = 40.0
-		time_range = "15m"
+		time_range = "-60m"
 		occurrence_type = "ResultCount"
 		trigger_source = "AllResults"
 		trigger_type = "Critical"
@@ -665,11 +732,12 @@ resource "sumologic_monitor" "test" {
 	triggers  {
 		threshold_type = "LessThanOrEqual"
 		threshold = 40.0
-		time_range = "15m"
+		time_range = "-60m"
 		occurrence_type = "ResultCount"
 		trigger_source = "AllResults"
 		trigger_type = "ResolvedCritical"
 		detection_method = "StaticCondition"
+		resolution_window = "5m"
 	  }
 	notifications {
 		notification {
@@ -724,6 +792,43 @@ resource "sumologic_role" "tf_test_role_03" {
 }`, testName, testName, testName, testName)
 }
 
+func testAccSumologicMonitorsLibraryMonitorWithNoResolutionWindow(testName string) string {
+	return fmt.Sprintf(`
+		resource "sumologic_monitor" "test" {
+			name = "terraform_test_monitor_%s"
+			description = "terraform_test_monitor_description"
+			type = "MonitorsLibraryMonitor"
+			is_disabled = false
+			content_type = "Monitor"
+			monitor_type = "Logs"
+			evaluation_delay = "5m"
+			queries {
+				row_id = "A"
+				query = "_sourceCategory=monitor-manager error"
+			}
+			triggers  {
+				threshold_type = "GreaterThan"
+				threshold = 40.0
+				time_range = "15m"
+				occurrence_type = "ResultCount"
+				trigger_source = "AllResults"
+				trigger_type = "Critical"
+				detection_method = "StaticCondition"
+			}
+			triggers  {
+				threshold_type = "LessThanOrEqual"
+				threshold = 40.0
+				time_range = "15m"
+				occurrence_type = "ResultCount"
+				trigger_source = "AllResults"
+				trigger_type = "ResolvedCritical"
+				detection_method = "StaticCondition"
+			}
+			playbook = "This is a test playbook"  
+			alert_name =  "Alert from {{Name}}"
+		}`, testName)
+}
+
 func testAccSumologicMonitorsLibraryMonitorUpdate(testName string) string {
 	return fmt.Sprintf(`
 resource "sumologic_monitor" "test" {
@@ -755,6 +860,7 @@ resource "sumologic_monitor" "test" {
 		trigger_source = "AllResults"
 		trigger_type = "ResolvedCritical"
 		detection_method = "StaticCondition"
+		resolution_window = "15m"
 	  }
 	notifications {
 		notification {
@@ -952,7 +1058,7 @@ resource "sumologic_monitor" "test" {
 var exampleLogsStaticTriggerConditionBlock = `
    logs_static_condition {
      critical {
-       time_range = "30m"
+       time_range = "60m"
        alert {
          threshold = 100.0
          threshold_type = "GreaterThan"
@@ -965,10 +1071,27 @@ var exampleLogsStaticTriggerConditionBlock = `
      field = "field"
    }`
 
+var exampleLogsStaticTriggerConditionBlockWithResolutionWindow = `
+   logs_static_condition {
+     critical {
+       time_range = "1h"
+       alert {
+         threshold = 100.0
+         threshold_type = "GreaterThan"
+       }
+       resolution {
+         threshold = 90
+         threshold_type = "LessThanOrEqual"
+		 resolution_window = "60m"
+       }
+     }
+     field = "field"
+   }`
+
 var exampleMetricsStaticTriggerConditionBlock1 = `
    metrics_static_condition {
      critical {
-       time_range = "30m"
+       time_range = "-30m"
        occurrence_type = "AtLeastOnce"
        alert {
          threshold = 100.0
@@ -1034,6 +1157,12 @@ func exampleLogsStaticMonitor(testName string) string {
 		exampleLogsStaticTriggerConditionBlock, []string{"Critical", "ResolvedCritical"})
 }
 
+func exampleLogsStaticMonitorWithResolutionWindow(testName string) string {
+	query := "error | timeslice 1m | count as field by _timeslice"
+	return exampleMonitorWithTriggerCondition(testName, "Logs", query,
+		exampleLogsStaticTriggerConditionBlockWithResolutionWindow, []string{"Critical", "ResolvedCritical"})
+}
+
 func exampleMetricsStaticMonitor1(testName string) string {
 	query := "error _sourceCategory=category"
 	return exampleMonitorWithTriggerCondition(testName, "Metrics", query,
@@ -1072,6 +1201,7 @@ func exampleMetricsMissingDataMonitor(testName string) string {
 
 var allExampleMonitors = []func(testName string) string{
 	exampleLogsStaticMonitor,
+	exampleLogsStaticMonitorWithResolutionWindow,
 	exampleMetricsStaticMonitor1,
 	exampleMetricsStaticMonitor2,
 	exampleLogsOutlierMonitor,
